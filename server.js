@@ -3,7 +3,11 @@ const express = require("express");
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const dbConnect=require("./Config/database");
-const CategoryRouter = require("./routes/CategoryRoute")
+const CategoryRouter = require("./routes/CategoryRoute");
+const globalError=require('./middlewares/errorMiddleware')
+
+const appError= require('./utils/appError');
+const {FAIL,ERROR,SUCCESS}=require('./utils/httpStatusText')
 
 const app = express();
 app.use(express.json());
@@ -16,6 +20,13 @@ if(process.env.NODE_ENV === 'development'){
 dbConnect();
 
 app.use("/api/Category",CategoryRouter);
+
+app.all(/.*/, (req, res, next) => {
+  const error = new appError('this page is not found',404,ERROR)
+  next(error)
+})
+
+app.use(globalError)
 
 
 

@@ -7,6 +7,9 @@ router.route("/")
 .post(CategoryServices.postCategory)
 
 
-router.get("/:id",CategoryServices.getSpecificCategory)
+router.route("/:id")
+.get(CategoryServices.getSpecificCategory)
+.patch(CategoryServices.updateSpecificCategory)
+.delete(CategoryServices.deleteCategory)
 
 module.exports= router;
