@@ -6,15 +6,44 @@ const {FAIL}=require('../utils/httpStatusText');
 const { validationResult } = require('express-validator');
 
 
-const getProducts =asyncHandler(
-      async(req,res,next)=>{
-     const query = req.query;
+const getProducts =asyncHandler(async(req,res,next)=>{
+    // filtering
+      const queryString ={...req.query};
+      const excludesFields=["page","limit","sort","fields"];
+      excludesFields.forEach((item)=> delete queryString[item]);
+
+        const filters = {};
+        for (let key in queryString) {
+            if (key.includes("[")) {
+            const [field, op] = key.split(/\[|\]/).filter(Boolean); // ['price','gte']
+            if (!filters[field]) filters[field] = {};
+            filters[field][`$${op}`] = Number(queryString[key]); // تحويل الرقم
+            } else {
+            filters[key] = queryString[key];
+            }
+        }
+        
+
+        const query = req.query;
         const limit = query.limit || 10;
         const page = query.page || 1;
         const skip =(page-1) * limit;
         
-       const products= await Product.find({},{"__v":false}).limit(limit).skip(skip)
+
+        let  mongooseQuery = Product.find(filters,{"__v":false}).limit(limit).skip(skip)
                .populate({ path: "category", select: "name -_id" });;
+
+   
+                if (req.query.sort) {
+                    const sortFields = req.query.sort.split(",").join(" "); // ['price','-ratingsAverage']
+                   mongooseQuery= mongooseQuery.sort(sortFields)
+                } else {
+                      mongooseQuery= mongooseQuery.sort("-createdAt")
+                 
+                }
+
+        
+       const products= await mongooseQuery;
        return res.status(201).json({status:'success',page,results:products.length,data:products})
     }
 
