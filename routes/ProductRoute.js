@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const ProductServices = require("../services/Product");
+const ProductServices = require("../services/productServices");
 const {createProductValidator,getProductValidator,updateProductValidator,deleteProductValidator} = require('../utils/productValidator')
 
 router.route("/")

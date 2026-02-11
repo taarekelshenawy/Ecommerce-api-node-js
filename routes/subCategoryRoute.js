@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const subCategoryServices = require("../services/subCategory");
+const subCategoryServices = require("../services/subcategoryServices");
 const {createsubCategoryValidator,getsubCategoryValidator,updatesubCategoryValidator,deletesubCategoryValidator} = require('../utils/Category/subcategoryValidator')
 
 router.route("/")
