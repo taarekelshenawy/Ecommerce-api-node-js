@@ -51,12 +51,27 @@ class apiFeature {
 
     }
 
-    paginate(){
+    paginate(countdocuments){
         const query = this.queryString;
         const limit = query.limit || 10;
         const page = query.page || 1;
         const skip =(page-1) * limit;
+        const endIndex = page * limit;
+
+        const pagination={};
+        pagination.currentPage=page;
+        pagination.limit = limit;
+       
+        pagination.numberOfpages= Math.ceil(countdocuments / limit);
+
+        if(endIndex < countdocuments){
+            pagination.next = +page + 1
+        }
+        if(skip > 0){
+            pagination.prev= page - 1;
+        }
         this.mongooseQuery=this.mongooseQuery.limit(limit).skip(skip);
+        this.paginationResult=pagination;
 
         return this;
 

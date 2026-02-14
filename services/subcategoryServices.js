@@ -4,6 +4,8 @@ const slugify = require('slugify');
 const appError = require('../utils/appError');
 const {FAIL}=require('../utils/httpStatusText');
 const { validationResult } = require('express-validator');
+const subcategoryModel = require("../models/subcategoryModel");
+const factory =require("./handlersFactory")
 
 
 const setCategoryIdtoBody=(req,res,next)=>{
@@ -67,20 +69,8 @@ const postsubCategory=asyncHandler(async(req,res)=>{
        return res.status(201).json({status:'success',data:newsubCategory})
 })
 
-const deletesubCategory = asyncHandler(
-    async(req,res,next)=>{
-        const id = req.params.id;
-        const subcategory =await subCategoryModel.findByIdAndDelete(id);
 
-        if(!subcategory){
-        const error =new appError("No Category for thid Id",404,FAIL);
-        return next(error)
-       }
-        return res.status(201).json({status:'success',data:"subcategory deleted"})
-
-
-    }
-)
+const  deletesubCategory=factory.deleteOne(subcategoryModel)
 
 module.exports={
     postsubCategory,

@@ -5,20 +5,25 @@ const appError = require('../utils/appError');
 const {FAIL}=require('../utils/httpStatusText');
 const { validationResult } = require('express-validator');
 
+const factory =require("./handlersFactory")
+
 const apiFeatures = require('../utils/apiFeatures')
 
 
 const getProducts =asyncHandler(async(req,res,next)=>{
+
+    const countDocuments= await Product.countDocuments();
    
         const apifeatures = new apiFeatures(Product.find(),req.query)
           .filter()
         .sort()
         .fieldLimit()
-        .paginate();
+        .paginate(countDocuments);
         //  .populate({ path: "category", select: "name -_id" })
+        const {mongooseQuery,paginationResult}=apifeatures;
         
-       const products= await apifeatures.mongooseQuery;
-       return res.status(201).json({status:'success',results:products.length,data:products})
+       const products= await mongooseQuery;
+       return res.status(201).json({status:'success',paginationResult,results:products.length,data:products})
     }
 
 )
@@ -59,22 +64,8 @@ const postProduct=asyncHandler(async(req,res)=>{
        return res.status(201).json({status:'success',data:newProduct})
 })
 
-const deleteProduct = asyncHandler(
-    async(req,res,next)=>{
-        const id = req.params.id;
-        console.log(id)
-        const product=await Product.findByIdAndDelete(id);
 
-        if(!product){
-        const error =new appError("No Product for thid Id",404,FAIL);
-        return next(error)
-       }
-        return res.status(201).json({status:'success',data:"Product deleted"})
-
-
-    }
-)
-
+const deleteProduct =factory.deleteOne(Product);
 module.exports={
     postProduct,
     getProducts,
