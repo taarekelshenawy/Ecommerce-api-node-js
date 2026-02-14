@@ -5,46 +5,25 @@ const appError = require('../utils/appError');
 const {FAIL}=require('../utils/httpStatusText');
 const { validationResult } = require('express-validator');
 
+const factory =require("./handlersFactory")
+
+const apiFeatures = require('../utils/apiFeatures')
+
 
 const getProducts =asyncHandler(async(req,res,next)=>{
-    // filtering
-      const queryString ={...req.query};
-      const excludesFields=["page","limit","sort","fields"];
-      excludesFields.forEach((item)=> delete queryString[item]);
 
-        const filters = {};
-        for (let key in queryString) {
-            if (key.includes("[")) {
-            const [field, op] = key.split(/\[|\]/).filter(Boolean); // ['price','gte']
-            if (!filters[field]) filters[field] = {};
-            filters[field][`$${op}`] = Number(queryString[key]); // تحويل الرقم
-            } else {
-            filters[key] = queryString[key];
-            }
-        }
-        
-
-        const query = req.query;
-        const limit = query.limit || 10;
-        const page = query.page || 1;
-        const skip =(page-1) * limit;
-        
-
-        let  mongooseQuery = Product.find(filters,{"__v":false}).limit(limit).skip(skip)
-               .populate({ path: "category", select: "name -_id" });;
-
+    const countDocuments= await Product.countDocuments();
    
-                if (req.query.sort) {
-                    const sortFields = req.query.sort.split(",").join(" "); // ['price','-ratingsAverage']
-                   mongooseQuery= mongooseQuery.sort(sortFields)
-                } else {
-                      mongooseQuery= mongooseQuery.sort("-createdAt")
-                 
-                }
-
+        const apifeatures = new apiFeatures(Product.find(),req.query)
+          .filter()
+        .sort()
+        .fieldLimit()
+        .paginate(countDocuments);
+        //  .populate({ path: "category", select: "name -_id" })
+        const {mongooseQuery,paginationResult}=apifeatures;
         
        const products= await mongooseQuery;
-       return res.status(201).json({status:'success',page,results:products.length,data:products})
+       return res.status(201).json({status:'success',paginationResult,results:products.length,data:products})
     }
 
 )
@@ -85,22 +64,8 @@ const postProduct=asyncHandler(async(req,res)=>{
        return res.status(201).json({status:'success',data:newProduct})
 })
 
-const deleteProduct = asyncHandler(
-    async(req,res,next)=>{
-        const id = req.params.id;
-        console.log(id)
-        const product=await Product.findByIdAndDelete(id);
 
-        if(!product){
-        const error =new appError("No Product for thid Id",404,FAIL);
-        return next(error)
-       }
-        return res.status(201).json({status:'success',data:"Product deleted"})
-
-
-    }
-)
-
+const deleteProduct =factory.deleteOne(Product);
 module.exports={
     postProduct,
     getProducts,
