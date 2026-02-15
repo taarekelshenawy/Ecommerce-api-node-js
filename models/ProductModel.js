@@ -73,6 +73,10 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-
+// في schema
+productSchema.pre(/^find/, async function() {
+    this.populate({ path: 'category', select: 'name -_id' });
+    // ❌ لا تستخدم next هنا
+});
 
 module.exports = mongoose.model('Product', productSchema);

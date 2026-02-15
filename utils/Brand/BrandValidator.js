@@ -1,4 +1,5 @@
 const {param,body} = require('express-validator');
+const slugify = require('slugify');
 const validatorMiddleware = require('../../middlewares/validatorMiddleware')
 
 const getBrandValidator=[
@@ -14,6 +15,10 @@ const createBrandValidator=[
     body('name')
     .notEmpty()
     .isLength({min:5}).withMessage("name is required"),
+    body('name').custom((val, { req }) => {
+          req.body.slug = slugify(val);
+          return true;
+        }),
     validatorMiddleware
 ]
 
@@ -23,6 +28,10 @@ const updateBrandValidator=[
     .withMessage('id param is required')
     .isMongoId()
     .withMessage('invalid mongo id format'),
+   body('name').custom((val, { req }) => {
+          req.body.slug = slugify(val);
+          return true;
+        }), 
     validatorMiddleware
 ]
 const deleteBrandValidator=[
