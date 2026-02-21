@@ -8,6 +8,9 @@ const CategorySchema = new mongoose.Schema({
     minlength:[3,"too short Category name"],
     maxlength:[32,"too most Category name"]
   }, 
+   image:{
+    type:String
+  },
   slug: {
     type:String,
     lowercase:true,

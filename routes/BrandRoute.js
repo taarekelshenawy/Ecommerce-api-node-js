@@ -6,7 +6,7 @@ const {getBrandValidator,createBrandValidator,
 
 router.route("/")
 .get(BrandServices.getBrands)
-.post(createBrandValidator,BrandServices.postBrand)
+.post(BrandServices.uploadBrandImage,BrandServices.resizeImage,createBrandValidator,BrandServices.postBrand)
 
 const subCategoryRoute = require('./subCategoryRoute');
 
