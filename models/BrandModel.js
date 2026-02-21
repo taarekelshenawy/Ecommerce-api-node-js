@@ -12,6 +12,9 @@ const BrandSchema = new mongoose.Schema({
     type:String,
     lowercase:true,
   },
+  image:{
+    type:String
+  }
 },{timestamps:true})
 
 module.exports=mongoose.model("Brand",BrandSchema);
