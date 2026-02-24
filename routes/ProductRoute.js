@@ -5,7 +5,7 @@ const {createProductValidator,getProductValidator,updateProductValidator,deleteP
 
 router.route("/")
 .get(ProductServices.getProducts)
-.post(createProductValidator,ProductServices.postProduct)
+.post(ProductServices.uploadProductImages,ProductServices.resizeProductImages,createProductValidator,ProductServices.postProduct)
 
 
 
