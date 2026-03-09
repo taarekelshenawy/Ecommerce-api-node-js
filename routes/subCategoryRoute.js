@@ -3,16 +3,16 @@ const router = express.Router({ mergeParams: true });
 const subCategoryServices = require("../services/subcategoryServices");
 const {createsubCategoryValidator,getsubCategoryValidator,
     updatesubCategoryValidator,deletesubCategoryValidator,  
-} = require('../utils/Category/subcategoryValidator');
+} = require('../utils/subcategoryValidator');
 const subcategoryModel = require("../models/subcategoryModel");
 
 router.route("/")
-.get(subCategoryServices.getsubCategory)
+.get(subCategoryServices.createFileobj,subCategoryServices.getsubCategory)
 .post(subCategoryServices.setCategoryIdtoBody,createsubCategoryValidator,subCategoryServices.postsubCategory)
 
 
 router.route("/:id")
-.get(getsubCategoryValidator,subCategoryServices.createFileobj,subCategoryServices.getSpecificsubCategory)
+.get(getsubCategoryValidator,subCategoryServices.getSpecificsubCategory)
 .patch(updatesubCategoryValidator,subCategoryServices.updateSpecificsubCategory)
 .delete(deletesubCategoryValidator,subCategoryServices.deletesubCategory)
 

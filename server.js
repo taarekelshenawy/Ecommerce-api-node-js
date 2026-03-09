@@ -2,12 +2,14 @@ const path = require('path');
 require('dotenv').config();
 const express = require("express");
 const morgan = require('morgan');
-const mongoose = require('mongoose');
 const dbConnect=require("./Config/database");
 const CategoryRouter = require("./routes/CategoryRoute");
 const BrandRouter = require("./routes/BrandRoute");
 const subCategoryRouter = require("./routes/subCategoryRoute");
 const ProductRouter = require("./routes/ProductRoute");
+const UserRouter = require('./routes/userRoute')
+const AuthRouter = require('./routes/authRoute')
+const ReviewsRouter = require('./routes/reviewsRoute')
 const globalError=require('./middlewares/errorMiddleware')
 
 const appError= require('./utils/appError');
@@ -28,6 +30,9 @@ app.use("/api/Category",CategoryRouter);
 app.use("/api/subCategory",subCategoryRouter);
 app.use("/api/Brand",BrandRouter);
 app.use("/api/products",ProductRouter);
+app.use("/api/users",UserRouter);
+app.use("/api/auth",AuthRouter);
+app.use("/api/reviews",ReviewsRouter);
 
 app.all(/.*/, (req, res, next) => {
   const error = new appError('this page is not found',404,ERROR)

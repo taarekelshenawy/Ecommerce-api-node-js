@@ -1,9 +1,6 @@
 const CategoryModel = require("../models/CategoryModel");
 const factory =require("./handlersFactory");
-const multer  = require('multer');
 const sharp = require('sharp');
-const apiError = require('../utils/appError')
-const {FAIL}=require('../utils/httpStatusText')
 const { uploadSingleImage} = require('../middlewares/uploadimageMiddleware')
 
 

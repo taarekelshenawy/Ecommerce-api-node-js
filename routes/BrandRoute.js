@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const BrandServices = require("../services/brandServices");
 const {getBrandValidator,createBrandValidator,
-    updateBrandValidator,deleteBrandValidator} = require('../utils/Brand/BrandValidator')
+    updateBrandValidator,deleteBrandValidator} = require('../utils/BrandValidator')
 
 router.route("/")
 .get(BrandServices.getBrands)
