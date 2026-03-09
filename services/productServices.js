@@ -78,7 +78,6 @@ module.exports={
     getSpecificProduct,
     updateSpecificProduct,
     deleteProduct,
-    // uploadProductImage,
     uploadProductImages,
     resizeProductImages,
    

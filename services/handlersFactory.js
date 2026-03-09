@@ -52,10 +52,13 @@ exports.getOne=(Model)=>asyncHandler(
 
 exports.getAll=(Model)=>asyncHandler(
       async(req,res,next)=>{
-
        const countDocuments= await Model.countDocuments();
+       let filter = {};
+        if (req.filterObj) {
+        filter = req.filterObj;
+        }
           
-        const apifeatures = new apiFeatures(Model.find(),req.query)
+        const apifeatures = new apiFeatures(Model.find(filter),req.query)
         .filter()
         .sort()
         .fieldLimit()

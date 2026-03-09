@@ -53,7 +53,7 @@ class apiFeature {
 
     paginate(countdocuments){
         const query = this.queryString;
-        const limit = query.limit || 10;
+        const limit = query.limit || 50;
         const page = query.page || 1;
         const skip =(page-1) * limit;
         const endIndex = page * limit;
