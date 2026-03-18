@@ -7,13 +7,13 @@ exports.deleteOne=(Model)=>
  asyncHandler(
     async(req,res,next)=>{
         const id = req.params.id;
-        console.log(id)
         const document=await Model.findByIdAndDelete(id);
 
         if(!document){
         const error =new appError("No documnet for thid Id",404,FAIL);
         return next(error)
        }
+       document.remove()
         return res.status(201).json({status:'success',data:"documnet deleted"})
 
 
@@ -26,6 +26,7 @@ exports.updateOne=(Model)=>asyncHandler(
         const error =new appError("No document for thid Id",404,FAIL);
         return next(error)
        }
+       document.save()
         return res.status(201).json({status:'success',data:document})
 
     }
@@ -37,10 +38,14 @@ exports.createOne =(Model)=>asyncHandler(async(req,res)=>{
        return res.status(201).json({status:'success',data:document})
 })
 
-exports.getOne=(Model)=>asyncHandler(
+exports.getOne=(Model,PopulateOpt)=>asyncHandler(
     async(req,res,next)=>{
         const id = req.params.id;
-        const document=await Model.findById(id);
+        let query = Model.findById(id);
+        if(PopulateOpt){
+          query.populate(PopulateOpt)
+        }
+        const document=await query;
         if(!document){
         const error =new appError("No document for thid Id",404,FAIL);
         return next(error)

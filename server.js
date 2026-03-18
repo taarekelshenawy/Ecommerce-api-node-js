@@ -9,7 +9,11 @@ const subCategoryRouter = require("./routes/subCategoryRoute");
 const ProductRouter = require("./routes/ProductRoute");
 const UserRouter = require('./routes/userRoute')
 const AuthRouter = require('./routes/authRoute')
-const ReviewsRouter = require('./routes/reviewsRoute')
+const ReviewsRouter = require('./routes/reviewsRoute');
+const WishlistRouter=require("./routes/wishlistRoute");
+const addressRouter = require('./routes/addressRoute')
+const couponRouter = require('./routes/couponRoute')
+const cartRouter = require('./routes/cartRoute')
 const globalError=require('./middlewares/errorMiddleware')
 
 const appError= require('./utils/appError');
@@ -33,6 +37,10 @@ app.use("/api/products",ProductRouter);
 app.use("/api/users",UserRouter);
 app.use("/api/auth",AuthRouter);
 app.use("/api/reviews",ReviewsRouter);
+app.use("/api/wishlist",WishlistRouter);
+app.use("/api/addresses",addressRouter);
+app.use("/api/coupons",couponRouter);
+app.use("/api/cart",cartRouter);
 
 app.all(/.*/, (req, res, next) => {
   const error = new appError('this page is not found',404,ERROR)
