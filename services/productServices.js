@@ -65,7 +65,7 @@ const resizeProductImages = asyncHandler(async (req, res, next) => {
 const getProducts = factory.getAll(Product)
 
 
-const getSpecificProduct =factory.getOne(Product)
+const getSpecificProduct =factory.getOne(Product,"reviews")
 
 const updateSpecificProduct=factory.updateOne(Product)
 const postProduct=factory.createOne(Product)

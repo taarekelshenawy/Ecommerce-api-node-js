@@ -69,7 +69,9 @@ const productSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
+  toObject: { virtuals: true } // So `console.log()` and other functions that use `toObject()` include virtuals
+  },
 );
 
 // في schema
@@ -102,5 +104,12 @@ productSchema.post('init', (doc) => {
 productSchema.post('save', (doc) => {
   setImageURL(doc);
 });
+
+// show revies
+productSchema.virtual("reviews",{
+   ref: 'Review',
+  localField: '_id',
+  foreignField: 'product',
+})
 
 module.exports = mongoose.model('Product', productSchema);
